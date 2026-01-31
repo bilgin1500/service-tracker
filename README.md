@@ -46,10 +46,13 @@ A comprehensive web application to track digital subscriptions, built with React
 ## Deployment
 
 Build the project:
+
 ```bash
 yarn build
 ```
+
 Deploy to Firebase Hosting:
+
 ```bash
 firebase deploy
 ```

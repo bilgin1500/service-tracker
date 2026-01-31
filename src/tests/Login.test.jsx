@@ -1,6 +1,8 @@
 import { render, screen } from '@testing-library/react';
 import App from '../App';
 import { AuthProvider } from '../contexts/AuthContext';
+import { LogIn } from 'lucide-react';
+import LoginPage from '../pages/LoginPage';
 import { vi } from 'vitest';
 
 // Mock Firebase Auth
@@ -12,7 +14,12 @@ vi.mock('firebase/auth', () => ({
   onAuthStateChanged: vi.fn((auth, callback) => {
     callback(null); // Simulate unauthenticated state by default
     return () => {}; // Unsubscribe function
-  })
+  }),
+}));
+
+// Mock firebase lib to avoid emulator connection logs
+vi.mock('../lib/firebase', () => ({
+  auth: { currentUser: null },
 }));
 
 describe('Login Flow', () => {
@@ -23,7 +30,9 @@ describe('Login Flow', () => {
       </AuthProvider>
     );
 
-    const loginButton = screen.getByRole('button', { name: /sign in with google/i });
+    const loginButton = screen.getByRole('button', {
+      name: /sign in with google/i,
+    });
     expect(loginButton).toBeInTheDocument();
   });
 });

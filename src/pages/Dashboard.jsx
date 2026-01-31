@@ -25,20 +25,22 @@ export default function Dashboard() {
         interval: data.interval,
         status: 'active',
         method: data.method,
-        managementUrl: selectedService.managementUrl || ''
+        managementUrl: selectedService.managementUrl || '',
       });
       setSelectedService(null);
       // Refresh local state
       if (currentUser) {
-        const subsSnapshot = await getDocs(collection(db, 'users', currentUser.uid, 'subscriptions'));
-        const fetchedSubs = subsSnapshot.docs.map(doc => ({
+        const subsSnapshot = await getDocs(
+          collection(db, 'users', currentUser.uid, 'subscriptions')
+        );
+        const fetchedSubs = subsSnapshot.docs.map((doc) => ({
           id: doc.id,
-          ...doc.data()
+          ...doc.data(),
         }));
         setSubscriptions(fetchedSubs);
       }
     } catch (error) {
-       console.error("Error saving subscription:", error);
+      console.error('Error saving subscription:', error);
     }
   };
 
@@ -48,23 +50,25 @@ export default function Dashboard() {
         setLoading(true);
         // Fetch Available Services
         const servicesSnapshot = await getDocs(collection(db, 'services'));
-        const fetchedServices = servicesSnapshot.docs.map(doc => ({
+        const fetchedServices = servicesSnapshot.docs.map((doc) => ({
           id: doc.id,
-          ...doc.data()
+          ...doc.data(),
         }));
         setServices(fetchedServices);
 
         // Fetch User Subscriptions
         if (currentUser) {
-          const subsSnapshot = await getDocs(collection(db, 'users', currentUser.uid, 'subscriptions'));
-          const fetchedSubs = subsSnapshot.docs.map(doc => ({
+          const subsSnapshot = await getDocs(
+            collection(db, 'users', currentUser.uid, 'subscriptions')
+          );
+          const fetchedSubs = subsSnapshot.docs.map((doc) => ({
             id: doc.id,
-            ...doc.data()
+            ...doc.data(),
           }));
           setSubscriptions(fetchedSubs);
         }
       } catch (error) {
-        console.error("Error fetching data: ", error);
+        console.error('Error fetching data: ', error);
       } finally {
         setLoading(false);
       }
@@ -75,10 +79,21 @@ export default function Dashboard() {
 
   return (
     <div style={{ maxWidth: '1200px', margin: '0 auto', padding: '2rem' }}>
-      <header style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '3rem' }}>
+      <header
+        style={{
+          display: 'flex',
+          justifyContent: 'space-between',
+          alignItems: 'center',
+          marginBottom: '3rem',
+        }}
+      >
         <div>
-          <h1 style={{ fontSize: '2rem', fontWeight: 700, margin: 0 }}>My Dashboard</h1>
-          <p style={{ color: 'var(--text-secondary)', marginTop: '0.5rem' }}>Welcome back, {currentUser?.displayName || 'User'}</p>
+          <h1 style={{ fontSize: '2rem', fontWeight: 700, margin: 0 }}>
+            My Dashboard
+          </h1>
+          <p style={{ color: 'var(--text-secondary)', marginTop: '0.5rem' }}>
+            Welcome back, {currentUser?.displayName || 'User'}
+          </p>
         </div>
         <button
           onClick={logout}
@@ -91,15 +106,15 @@ export default function Dashboard() {
             border: '1px solid var(--border-subtle)',
             color: 'var(--text-secondary)',
             borderRadius: 'var(--radius-md)',
-            transition: 'all 0.2s'
+            transition: 'all 0.2s',
           }}
           onMouseOver={(e) => {
-             e.currentTarget.style.color = 'var(--text-primary)';
-             e.currentTarget.style.borderColor = 'var(--text-primary)';
+            e.currentTarget.style.color = 'var(--text-primary)';
+            e.currentTarget.style.borderColor = 'var(--text-primary)';
           }}
           onMouseOut={(e) => {
-             e.currentTarget.style.color = 'var(--text-secondary)';
-             e.currentTarget.style.borderColor = 'var(--border-subtle)';
+            e.currentTarget.style.color = 'var(--text-secondary)';
+            e.currentTarget.style.borderColor = 'var(--border-subtle)';
           }}
         >
           <LogOut size={16} />
@@ -109,35 +124,99 @@ export default function Dashboard() {
 
       {subscriptions.length > 0 && (
         <section style={{ marginBottom: '3rem' }}>
-          <h2 style={{ fontSize: '1.25rem', marginBottom: '1.5rem' }}>My Subscriptions</h2>
-          <div style={{
-            display: 'grid',
-            gridTemplateColumns: 'repeat(auto-fill, minmax(250px, 1fr))',
-            gap: '1.5rem'
-          }}>
-            {subscriptions.map(sub => (
-              <div key={sub.id} style={{
-                backgroundColor: 'var(--bg-card)',
-                borderRadius: 'var(--radius-lg)',
-                padding: '1.5rem',
-                border: '1px solid var(--primary)',
-                display: 'flex',
-                flexDirection: 'column',
-                gap: '0.5rem'
-              }}>
-                <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-                  <h3 style={{ margin: 0, fontSize: '1.1rem', fontWeight: 600 }}>{sub.name}</h3>
-                  <span style={{ fontSize: '0.8rem', padding: '0.2rem 0.5rem', borderRadius: 'var(--radius-full)', backgroundColor: 'var(--success)', color: 'black', fontWeight: 600 }}>{sub.status}</span>
+          <h2 style={{ fontSize: '1.25rem', marginBottom: '1.5rem' }}>
+            My Subscriptions
+          </h2>
+          <div
+            style={{
+              display: 'grid',
+              gridTemplateColumns: 'repeat(auto-fill, minmax(250px, 1fr))',
+              gap: '1.5rem',
+            }}
+          >
+            {subscriptions.map((sub) => (
+              <div
+                key={sub.id}
+                style={{
+                  backgroundColor: 'var(--bg-card)',
+                  borderRadius: 'var(--radius-lg)',
+                  padding: '1.5rem',
+                  border: '1px solid var(--primary)',
+                  display: 'flex',
+                  flexDirection: 'column',
+                  gap: '0.5rem',
+                }}
+              >
+                <div
+                  style={{
+                    display: 'flex',
+                    justifyContent: 'space-between',
+                    alignItems: 'center',
+                  }}
+                >
+                  <h3
+                    style={{ margin: 0, fontSize: '1.1rem', fontWeight: 600 }}
+                  >
+                    {sub.name}
+                  </h3>
+                  <span
+                    style={{
+                      fontSize: '0.8rem',
+                      padding: '0.2rem 0.5rem',
+                      borderRadius: 'var(--radius-full)',
+                      backgroundColor: 'var(--success)',
+                      color: 'black',
+                      fontWeight: 600,
+                    }}
+                  >
+                    {sub.status}
+                  </span>
                 </div>
                 <div style={{ fontSize: '1.5rem', fontWeight: 700 }}>
-                  ${sub.price} <span style={{ fontSize: '0.9rem', color: 'var(--text-secondary)', fontWeight: 400 }}>/{sub.interval}</span>
+                  ${sub.price}{' '}
+                  <span
+                    style={{
+                      fontSize: '0.9rem',
+                      color: 'var(--text-secondary)',
+                      fontWeight: 400,
+                    }}
+                  >
+                    /{sub.interval}
+                  </span>
                 </div>
                 {sub.method === 'connect' ? (
-                   <span style={{ fontSize: '0.8rem', color: 'var(--text-secondary)' }}>Synced via API</span>
+                  <span
+                    style={{
+                      fontSize: '0.8rem',
+                      color: 'var(--text-secondary)',
+                    }}
+                  >
+                    Synced via API
+                  </span>
                 ) : (
-                   <span style={{ fontSize: '0.8rem', color: 'var(--text-secondary)' }}>Manual Entry</span>
+                  <span
+                    style={{
+                      fontSize: '0.8rem',
+                      color: 'var(--text-secondary)',
+                    }}
+                  >
+                    Manual Entry
+                  </span>
                 )}
-                <a href={sub.managementUrl || '#'} target="_blank" rel="noreferrer" style={{ marginTop: '1rem', textAlign: 'center', width: '100%', padding: '0.5rem', border: '1px solid var(--border-subtle)', borderRadius: 'var(--radius-md)', fontSize: '0.9rem' }}>
+                <a
+                  href={sub.managementUrl || '#'}
+                  target="_blank"
+                  rel="noreferrer"
+                  style={{
+                    marginTop: '1rem',
+                    textAlign: 'center',
+                    width: '100%',
+                    padding: '0.5rem',
+                    border: '1px solid var(--border-subtle)',
+                    borderRadius: 'var(--radius-md)',
+                    fontSize: '0.9rem',
+                  }}
+                >
                   Manage Subscription
                 </a>
               </div>
@@ -147,19 +226,29 @@ export default function Dashboard() {
       )}
 
       <section>
-        <h2 style={{ fontSize: '1.25rem', marginBottom: '1.5rem', display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
-          Available Services
-          <button style={{
-            backgroundColor: 'var(--bg-card)',
-            border: '1px solid var(--border-subtle)',
-            color: 'var(--text-secondary)',
-            borderRadius: 'var(--radius-full)',
-            width: '32px',
-            height: '32px',
+        <h2
+          style={{
+            fontSize: '1.25rem',
+            marginBottom: '1.5rem',
             display: 'flex',
             alignItems: 'center',
-            justifyContent: 'center'
-          }}>
+            justifyContent: 'space-between',
+          }}
+        >
+          Available Services
+          <button
+            style={{
+              backgroundColor: 'var(--bg-card)',
+              border: '1px solid var(--border-subtle)',
+              color: 'var(--text-secondary)',
+              borderRadius: 'var(--radius-full)',
+              width: '32px',
+              height: '32px',
+              display: 'flex',
+              alignItems: 'center',
+              justifyContent: 'center',
+            }}
+          >
             <Plus size={16} />
           </button>
         </h2>
@@ -167,44 +256,59 @@ export default function Dashboard() {
         {loading ? (
           <p style={{ color: 'var(--text-secondary)' }}>Loading services...</p>
         ) : services.length === 0 ? (
-          <p style={{ color: 'var(--text-secondary)' }}>No services found. Ask admin to add some!</p>
+          <p style={{ color: 'var(--text-secondary)' }}>
+            No services found. Ask admin to add some!
+          </p>
         ) : (
-          <div style={{
-            display: 'grid',
-            gridTemplateColumns: 'repeat(auto-fill, minmax(200px, 1fr))',
-            gap: '1.5rem'
-          }}>
-            {services.map(service => (
-              <div key={service.id}
-              onClick={() => handleServiceClick(service)}
-              style={{
-                backgroundColor: 'var(--bg-card)',
-                borderRadius: 'var(--radius-lg)',
-                padding: '1.5rem',
-                border: '1px solid var(--border-subtle)',
-                display: 'flex',
-                flexDirection: 'column',
-                alignItems: 'center',
-                gap: '1rem',
-                cursor: 'pointer',
-                transition: 'transform 0.2s, border-color 0.2s'
-              }}
-              onMouseOver={(e) => {
-                e.currentTarget.style.borderColor = 'var(--primary)';
-                e.currentTarget.style.transform = 'translateY(-2px)';
-              }}
-              onMouseOut={(e) => {
-                e.currentTarget.style.borderColor = 'var(--border-subtle)';
-                e.currentTarget.style.transform = 'translateY(0)';
-              }}
+          <div
+            style={{
+              display: 'grid',
+              gridTemplateColumns: 'repeat(auto-fill, minmax(200px, 1fr))',
+              gap: '1.5rem',
+            }}
+          >
+            {services.map((service) => (
+              <div
+                key={service.id}
+                onClick={() => handleServiceClick(service)}
+                style={{
+                  backgroundColor: 'var(--bg-card)',
+                  borderRadius: 'var(--radius-lg)',
+                  padding: '1.5rem',
+                  border: '1px solid var(--border-subtle)',
+                  display: 'flex',
+                  flexDirection: 'column',
+                  alignItems: 'center',
+                  gap: '1rem',
+                  cursor: 'pointer',
+                  transition: 'transform 0.2s, border-color 0.2s',
+                }}
+                onMouseOver={(e) => {
+                  e.currentTarget.style.borderColor = 'var(--primary)';
+                  e.currentTarget.style.transform = 'translateY(-2px)';
+                }}
+                onMouseOut={(e) => {
+                  e.currentTarget.style.borderColor = 'var(--border-subtle)';
+                  e.currentTarget.style.transform = 'translateY(0)';
+                }}
               >
                 <img
                   src={service.logo}
                   alt={service.name}
-                  style={{ width: '48px', height: '48px', borderRadius: '50%', objectFit: 'cover' }}
-                  onError={(e) => { e.target.src = 'https://via.placeholder.com/48?text=' + service.name[0] }}
+                  style={{
+                    width: '48px',
+                    height: '48px',
+                    borderRadius: '50%',
+                    objectFit: 'cover',
+                  }}
+                  onError={(e) => {
+                    e.target.src =
+                      'https://via.placeholder.com/48?text=' + service.name[0];
+                  }}
                 />
-                <h3 style={{ margin: 0, fontSize: '1rem', fontWeight: 600 }}>{service.name}</h3>
+                <h3 style={{ margin: 0, fontSize: '1rem', fontWeight: 600 }}>
+                  {service.name}
+                </h3>
               </div>
             ))}
           </div>

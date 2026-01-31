@@ -1,4 +1,4 @@
-import { render, screen, waitFor } from '@testing-library/react';
+import { render, screen } from '@testing-library/react';
 import { vi } from 'vitest';
 import Dashboard from '../pages/Dashboard';
 import { AuthProvider } from '../contexts/AuthContext';
@@ -6,7 +6,7 @@ import { AuthProvider } from '../contexts/AuthContext';
 // Mock Firebase
 vi.mock('../lib/firebase', () => ({
   db: {},
-  auth: {}
+  auth: {},
 }));
 
 vi.mock('firebase/firestore', async (importOriginal) => {
@@ -15,18 +15,32 @@ vi.mock('firebase/firestore', async (importOriginal) => {
     ...actual,
     getFirestore: vi.fn(),
     collection: vi.fn((db, ...path) => path.join('/')),
-    getDocs: vi.fn(() => Promise.resolve({
-      docs: [
-        {
-          id: '1',
-          data: () => ({ name: 'Netflix', logo: 'netflix-logo.png', managementUrl: '...' })
-        },
-        {
-          id: '2',
-          data: () => ({ name: 'Spotify', logo: 'spotify-logo.png', managementUrl: '...' })
-        }
-      ]
-    })),
+    getDocs: vi.fn((path) => {
+      if (path === 'services') {
+        return Promise.resolve({
+          docs: [
+            {
+              id: '1',
+              data: () => ({
+                name: 'Netflix',
+                logo: 'netflix-logo.png',
+                managementUrl: '...',
+              }),
+            },
+            {
+              id: '2',
+              data: () => ({
+                name: 'Spotify',
+                logo: 'spotify-logo.png',
+                managementUrl: '...',
+              }),
+            },
+          ],
+        });
+      }
+      // Return empty for subscriptions
+      return Promise.resolve({ docs: [] });
+    }),
     // Mock for user subscriptions query
     query: vi.fn(),
   };
@@ -41,12 +55,11 @@ vi.mock('../contexts/AuthContext', async (importOriginal) => {
     ...actual,
     useAuth: () => ({
       currentUser: mockCurrentUser,
-      logout: vi.fn()
+      logout: vi.fn(),
     }),
-    AuthProvider: ({ children }) => children
+    AuthProvider: ({ children }) => children,
   };
 });
-
 
 describe('Service Discovery', () => {
   it('displays available services fetched from firestore', async () => {

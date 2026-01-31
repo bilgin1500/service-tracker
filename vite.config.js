@@ -1,13 +1,24 @@
-import { defineConfig } from 'vite'
-import react from '@vitejs/plugin-react'
+import { defineConfig } from 'vite';
+import react from '@vitejs/plugin-react';
+import checker from 'vite-plugin-checker';
 
 // https://vitejs.dev/config/
-export default defineConfig({
-  plugins: [react()],
+export default defineConfig(({ mode }) => ({
+  plugins: [
+    react(),
+    mode !== 'test' &&
+      checker({
+        eslint: {
+          useFlatConfig: true,
+          lintCommand: 'eslint "./src/**/*.{js,jsx}"',
+        },
+        overlay: { initialIsOpen: false },
+      }),
+  ].filter(Boolean),
   test: {
     globals: true,
     environment: 'jsdom',
     setupFiles: './src/tests/setup.js',
     css: true,
   },
-})
+}));

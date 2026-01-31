@@ -5,7 +5,7 @@ import * as firestore from 'firebase/firestore';
 
 vi.mock('../lib/firebase', () => ({
   db: {},
-  auth: {}
+  auth: {},
 }));
 
 vi.mock('firebase/firestore', async (importOriginal) => {
@@ -28,9 +28,15 @@ describe('Admin Service Creation', () => {
     expect(screen.getByLabelText(/management url/i)).toBeInTheDocument();
 
     // Fill form
-    fireEvent.change(screen.getByLabelText(/service name/i), { target: { value: 'Netflix' } });
-    fireEvent.change(screen.getByLabelText(/logo url/i), { target: { value: 'https://netflix.com/logo.png' } });
-    fireEvent.change(screen.getByLabelText(/management url/i), { target: { value: 'https://netflix.com' } });
+    fireEvent.change(screen.getByLabelText(/service name/i), {
+      target: { value: 'Netflix' },
+    });
+    fireEvent.change(screen.getByLabelText(/logo url/i), {
+      target: { value: 'https://netflix.com/logo.png' },
+    });
+    fireEvent.change(screen.getByLabelText(/management url/i), {
+      target: { value: 'https://netflix.com' },
+    });
 
     // Submit
     const submitBtn = screen.getByRole('button', { name: /add service/i });
@@ -43,7 +49,7 @@ describe('Admin Service Creation', () => {
         name: 'Netflix',
         logo: 'https://netflix.com/logo.png',
         managementUrl: 'https://netflix.com',
-        hasApi: false
+        hasApi: false,
       })
     );
   });

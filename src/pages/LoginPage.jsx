@@ -17,29 +17,36 @@ export default function LoginPage() {
     try {
       await login();
     } catch (error) {
-      console.error("Failed to login", error);
+      console.error('Failed to login', error);
     }
   };
 
   return (
-    <div style={{
-      display: 'flex',
-      flexDirection: 'column',
-      alignItems: 'center',
-      justifyContent: 'center',
-      height: '100vh',
-      backgroundColor: 'var(--bg-app)',
-      color: 'var(--text-primary)'
-    }}>
-      <div style={{
-        backgroundColor: 'var(--bg-card)',
-        padding: '2rem',
-        borderRadius: 'var(--radius-lg)',
-        boxShadow: '0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06)',
-        textAlign: 'center',
-        border: '1px solid var(--border-subtle)'
-      }}>
-        <h1 style={{ margin: '0 0 1rem', fontSize: '1.5rem', fontWeight: 600 }}>Service Tracker</h1>
+    <div
+      style={{
+        display: 'flex',
+        flexDirection: 'column',
+        alignItems: 'center',
+        justifyContent: 'center',
+        height: '100vh',
+        backgroundColor: 'var(--bg-app)',
+        color: 'var(--text-primary)',
+      }}
+    >
+      <div
+        style={{
+          backgroundColor: 'var(--bg-card)',
+          padding: '2rem',
+          borderRadius: 'var(--radius-lg)',
+          boxShadow:
+            '0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06)',
+          textAlign: 'center',
+          border: '1px solid var(--border-subtle)',
+        }}
+      >
+        <h1 style={{ margin: '0 0 1rem', fontSize: '1.5rem', fontWeight: 600 }}>
+          Service Tracker
+        </h1>
         <p style={{ color: 'var(--text-secondary)', marginBottom: '2rem' }}>
           Manage all your subscriptions in one place.
         </p>
@@ -59,10 +66,14 @@ export default function LoginPage() {
             fontSize: '1rem',
             fontWeight: 500,
             transition: 'background-color 0.2s',
-            width: '100%'
+            width: '100%',
           }}
-          onMouseOver={(e) => e.target.style.backgroundColor = 'var(--primary-hover)'}
-          onMouseOut={(e) => e.target.style.backgroundColor = 'var(--primary)'}
+          onMouseOver={(e) =>
+            (e.target.style.backgroundColor = 'var(--primary-hover)')
+          }
+          onMouseOut={(e) =>
+            (e.target.style.backgroundColor = 'var(--primary)')
+          }
         >
           <LogIn size={20} />
           Sign in with Google

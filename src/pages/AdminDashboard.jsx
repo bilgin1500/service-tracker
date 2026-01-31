@@ -26,12 +26,12 @@ export default function AdminDashboard() {
         name: formData.name,
         logo: formData.logo,
         managementUrl: formData.managementUrl,
-        hasApi: false
+        hasApi: false,
       });
       setMessage('Service added successfully!');
       setFormData({ name: '', logo: '', managementUrl: '' });
     } catch (error) {
-      console.error("Error adding service: ", error);
+      console.error('Error adding service: ', error);
       setMessage('Error adding service.');
     } finally {
       setLoading(false);
@@ -42,19 +42,46 @@ export default function AdminDashboard() {
     <div style={{ padding: '2rem', maxWidth: '600px', margin: '0 auto' }}>
       <h1 style={{ marginBottom: '1.5rem' }}>Admin Dashboard</h1>
 
-      <div style={{
-        backgroundColor: 'var(--bg-card)',
-        padding: '1.5rem',
-        borderRadius: 'var(--radius-lg)',
-        border: '1px solid var(--border-subtle)'
-      }}>
-        <h2 style={{ fontSize: '1.25rem', marginBottom: '1rem' }}>Add New Service</h2>
+      <div
+        style={{
+          backgroundColor: 'var(--bg-card)',
+          padding: '1.5rem',
+          borderRadius: 'var(--radius-lg)',
+          border: '1px solid var(--border-subtle)',
+        }}
+      >
+        <h2 style={{ fontSize: '1.25rem', marginBottom: '1rem' }}>
+          Add New Service
+        </h2>
 
-        {message && <p style={{ color: message.includes('Error') ? 'var(--danger)' : 'var(--success)', marginBottom: '1rem' }}>{message}</p>}
+        {message && (
+          <p
+            style={{
+              color: message.includes('Error')
+                ? 'var(--danger)'
+                : 'var(--success)',
+              marginBottom: '1rem',
+            }}
+          >
+            {message}
+          </p>
+        )}
 
-        <form onSubmit={handleSubmit} style={{ display: 'flex', flexDirection: 'column', gap: '1rem' }}>
+        <form
+          onSubmit={handleSubmit}
+          style={{ display: 'flex', flexDirection: 'column', gap: '1rem' }}
+        >
           <div>
-            <label htmlFor="name" style={{ display: 'block', marginBottom: '0.5rem', color: 'var(--text-secondary)' }}>Service Name</label>
+            <label
+              htmlFor="name"
+              style={{
+                display: 'block',
+                marginBottom: '0.5rem',
+                color: 'var(--text-secondary)',
+              }}
+            >
+              Service Name
+            </label>
             <input
               id="name"
               type="text"
@@ -69,13 +96,22 @@ export default function AdminDashboard() {
                 borderRadius: 'var(--radius-md)',
                 border: '1px solid var(--border-subtle)',
                 backgroundColor: 'var(--bg-app)',
-                color: 'var(--text-primary)'
+                color: 'var(--text-primary)',
               }}
             />
           </div>
 
           <div>
-            <label htmlFor="logo" style={{ display: 'block', marginBottom: '0.5rem', color: 'var(--text-secondary)' }}>Logo URL</label>
+            <label
+              htmlFor="logo"
+              style={{
+                display: 'block',
+                marginBottom: '0.5rem',
+                color: 'var(--text-secondary)',
+              }}
+            >
+              Logo URL
+            </label>
             <input
               id="logo"
               type="url"
@@ -90,13 +126,22 @@ export default function AdminDashboard() {
                 borderRadius: 'var(--radius-md)',
                 border: '1px solid var(--border-subtle)',
                 backgroundColor: 'var(--bg-app)',
-                color: 'var(--text-primary)'
+                color: 'var(--text-primary)',
               }}
             />
           </div>
 
           <div>
-            <label htmlFor="managementUrl" style={{ display: 'block', marginBottom: '0.5rem', color: 'var(--text-secondary)' }}>Management URL</label>
+            <label
+              htmlFor="managementUrl"
+              style={{
+                display: 'block',
+                marginBottom: '0.5rem',
+                color: 'var(--text-secondary)',
+              }}
+            >
+              Management URL
+            </label>
             <input
               id="managementUrl"
               type="url"
@@ -111,7 +156,7 @@ export default function AdminDashboard() {
                 borderRadius: 'var(--radius-md)',
                 border: '1px solid var(--border-subtle)',
                 backgroundColor: 'var(--bg-app)',
-                color: 'var(--text-primary)'
+                color: 'var(--text-primary)',
               }}
             />
           </div>
@@ -132,7 +177,7 @@ export default function AdminDashboard() {
               fontSize: '1rem',
               fontWeight: 500,
               cursor: loading ? 'not-allowed' : 'pointer',
-              opacity: loading ? 0.7 : 1
+              opacity: loading ? 0.7 : 1,
             }}
           >
             <Plus size={18} />

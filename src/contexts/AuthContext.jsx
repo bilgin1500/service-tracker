@@ -1,6 +1,11 @@
-import { createContext, useContext, useEffect, useState } from "react";
-import { auth } from "../lib/firebase";
-import { GoogleAuthProvider, signInWithPopup, signOut, onAuthStateChanged } from "firebase/auth";
+import { createContext, useContext, useEffect, useState } from 'react';
+import { auth } from '../lib/firebase';
+import {
+  GoogleAuthProvider,
+  signInWithPopup,
+  signOut,
+  onAuthStateChanged,
+} from 'firebase/auth';
 
 const AuthContext = createContext();
 
@@ -33,7 +38,7 @@ export function AuthProvider({ children }) {
   const value = {
     currentUser,
     login,
-    logout
+    logout,
   };
 
   return (

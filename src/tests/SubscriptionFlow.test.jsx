@@ -1,4 +1,4 @@
-import { render, screen, fireEvent, waitFor } from '@testing-library/react';
+import { render, screen, fireEvent } from '@testing-library/react';
 import { vi } from 'vitest';
 import Dashboard from '../pages/Dashboard';
 import { AuthProvider } from '../contexts/AuthContext';
@@ -7,7 +7,7 @@ import * as firestore from 'firebase/firestore';
 // Mock Firebase
 vi.mock('../lib/firebase', () => ({
   db: {},
-  auth: {}
+  auth: {},
 }));
 
 vi.mock('firebase/firestore', async (importOriginal) => {
@@ -15,16 +15,26 @@ vi.mock('firebase/firestore', async (importOriginal) => {
   return {
     ...actual,
     getFirestore: vi.fn(),
-    collection: vi.fn(() => 'mock-collection-ref'),
+    collection: vi.fn((db, ...path) => path.join('/')),
     doc: vi.fn(),
-    getDocs: vi.fn(() => Promise.resolve({
-      docs: [
-        {
-          id: '1',
-          data: () => ({ name: 'Netflix', logo: 'netflix.png', managementUrl: '...', hasApi: false })
-        }
-      ]
-    })),
+    getDocs: vi.fn((path) => {
+      if (path === 'services') {
+        return Promise.resolve({
+          docs: [
+            {
+              id: '1',
+              data: () => ({
+                name: 'Netflix',
+                logo: 'netflix.png',
+                managementUrl: '...',
+                hasApi: false,
+              }),
+            },
+          ],
+        });
+      }
+      return Promise.resolve({ docs: [] });
+    }),
     addDoc: vi.fn(() => Promise.resolve({ id: 'new-sub-id' })),
     onSnapshot: vi.fn(),
   };
@@ -39,9 +49,9 @@ vi.mock('../contexts/AuthContext', async (importOriginal) => {
     ...actual,
     useAuth: () => ({
       currentUser: mockCurrentUser,
-      logout: vi.fn()
+      logout: vi.fn(),
     }),
-    AuthProvider: ({ children }) => children
+    AuthProvider: ({ children }) => children,
   };
 });
 
@@ -81,7 +91,7 @@ describe('Subscription Flow', () => {
         serviceId: '1',
         name: 'Netflix',
         price: '15.99',
-        status: 'active'
+        status: 'active',
       })
     );
   });

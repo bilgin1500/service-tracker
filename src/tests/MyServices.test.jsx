@@ -6,7 +6,7 @@ import { AuthProvider } from '../contexts/AuthContext';
 // Mock Firebase
 vi.mock('../lib/firebase', () => ({
   db: {},
-  auth: {}
+  auth: {},
 }));
 
 vi.mock('firebase/firestore', async (importOriginal) => {
@@ -24,9 +24,14 @@ vi.mock('firebase/firestore', async (importOriginal) => {
           docs: [
             {
               id: 'sub1',
-              data: () => ({ name: 'Disney+', price: '7.99', status: 'active', serviceId: 'dplus' })
-            }
-          ]
+              data: () => ({
+                name: 'Disney+',
+                price: '7.99',
+                status: 'active',
+                serviceId: 'dplus',
+              }),
+            },
+          ],
         });
       }
       return Promise.resolve({ docs: [] });
@@ -43,9 +48,9 @@ vi.mock('../contexts/AuthContext', async (importOriginal) => {
     ...actual,
     useAuth: () => ({
       currentUser: mockCurrentUser,
-      logout: vi.fn()
+      logout: vi.fn(),
     }),
-    AuthProvider: ({ children }) => children
+    AuthProvider: ({ children }) => children,
   };
 });
 
