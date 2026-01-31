@@ -5,6 +5,7 @@ import { db } from '../lib/firebase';
 import { LogOut, Plus } from 'lucide-react';
 import ServiceConnectionModal from '../components/ServiceConnectionModal';
 import { Service, Subscription } from '../types';
+import styles from './Dashboard.module.css';
 
 export default function Dashboard() {
   const { logout, currentUser } = useAuth();
@@ -80,144 +81,47 @@ export default function Dashboard() {
   }, [currentUser]);
 
   return (
-    <div style={{ maxWidth: '1200px', margin: '0 auto', padding: '2rem' }}>
-      <header
-        style={{
-          display: 'flex',
-          justifyContent: 'space-between',
-          alignItems: 'center',
-          marginBottom: '3rem',
-        }}
-      >
+    <div className={styles.container}>
+      <header className={styles.header}>
         <div>
-          <h1 style={{ fontSize: '2rem', fontWeight: 700, margin: 0 }}>
-            My Dashboard
-          </h1>
-          <p style={{ color: 'var(--text-secondary)', marginTop: '0.5rem' }}>
+          <h1 className={styles.title}>My Dashboard</h1>
+          <p className={styles.welcomeText}>
             Welcome back, {currentUser?.displayName || 'User'}
           </p>
         </div>
-        <button
-          onClick={logout}
-          style={{
-            display: 'flex',
-            alignItems: 'center',
-            gap: '0.5rem',
-            padding: '0.5rem 1rem',
-            backgroundColor: 'transparent',
-            border: '1px solid var(--border-subtle)',
-            color: 'var(--text-secondary)',
-            borderRadius: 'var(--radius-md)',
-            transition: 'all 0.2s',
-          }}
-          onMouseOver={(e) => {
-            e.currentTarget.style.color = 'var(--text-primary)';
-            e.currentTarget.style.borderColor = 'var(--text-primary)';
-          }}
-          onMouseOut={(e) => {
-            e.currentTarget.style.color = 'var(--text-secondary)';
-            e.currentTarget.style.borderColor = 'var(--border-subtle)';
-          }}
-        >
+        <button onClick={logout} className={styles.signOutButton}>
           <LogOut size={16} />
           Sign Out
         </button>
       </header>
 
       {subscriptions.length > 0 && (
-        <section style={{ marginBottom: '3rem' }}>
-          <h2 style={{ fontSize: '1.25rem', marginBottom: '1.5rem' }}>
-            My Subscriptions
-          </h2>
-          <div
-            style={{
-              display: 'grid',
-              gridTemplateColumns: 'repeat(auto-fill, minmax(250px, 1fr))',
-              gap: '1.5rem',
-            }}
-          >
+        <section className={styles.section}>
+          <h2 className={styles.sectionHeader}>My Subscriptions</h2>
+          <div className={styles.grid}>
             {subscriptions.map((sub) => (
               <div
                 key={sub.id}
-                style={{
-                  backgroundColor: 'var(--bg-card)',
-                  borderRadius: 'var(--radius-lg)',
-                  padding: '1.5rem',
-                  border: '1px solid var(--primary)',
-                  display: 'flex',
-                  flexDirection: 'column',
-                  gap: '0.5rem',
-                }}
+                className={`${styles.card} ${styles.cardActive}`}
               >
-                <div
-                  style={{
-                    display: 'flex',
-                    justifyContent: 'space-between',
-                    alignItems: 'center',
-                  }}
-                >
-                  <h3
-                    style={{ margin: 0, fontSize: '1.1rem', fontWeight: 600 }}
-                  >
-                    {sub.name}
-                  </h3>
-                  <span
-                    style={{
-                      fontSize: '0.8rem',
-                      padding: '0.2rem 0.5rem',
-                      borderRadius: 'var(--radius-full)',
-                      backgroundColor: 'var(--success)',
-                      color: 'black',
-                      fontWeight: 600,
-                    }}
-                  >
-                    {sub.status}
-                  </span>
+                <div className={styles.cardHeader}>
+                  <h3 className={styles.serviceName}>{sub.name}</h3>
+                  <span className={styles.statusBadge}>{sub.status}</span>
                 </div>
-                <div style={{ fontSize: '1.5rem', fontWeight: 700 }}>
+                <div className={styles.price}>
                   ${sub.price}{' '}
-                  <span
-                    style={{
-                      fontSize: '0.9rem',
-                      color: 'var(--text-secondary)',
-                      fontWeight: 400,
-                    }}
-                  >
-                    /{sub.interval}
-                  </span>
+                  <span className={styles.interval}>/{sub.interval}</span>
                 </div>
                 {sub.method === 'connect' ? (
-                  <span
-                    style={{
-                      fontSize: '0.8rem',
-                      color: 'var(--text-secondary)',
-                    }}
-                  >
-                    Synced via API
-                  </span>
+                  <span className={styles.syncedText}>Synced via API</span>
                 ) : (
-                  <span
-                    style={{
-                      fontSize: '0.8rem',
-                      color: 'var(--text-secondary)',
-                    }}
-                  >
-                    Manual Entry
-                  </span>
+                  <span className={styles.manualText}>Manual Entry</span>
                 )}
                 <a
                   href={sub.managementUrl || '#'}
                   target="_blank"
                   rel="noreferrer"
-                  style={{
-                    marginTop: '1rem',
-                    textAlign: 'center',
-                    width: '100%',
-                    padding: '0.5rem',
-                    border: '1px solid var(--border-subtle)',
-                    borderRadius: 'var(--radius-md)',
-                    fontSize: '0.9rem',
-                  }}
+                  className={styles.manageLink}
                 >
                   Manage Subscription
                 </a>
@@ -228,89 +132,37 @@ export default function Dashboard() {
       )}
 
       <section>
-        <h2
-          style={{
-            fontSize: '1.25rem',
-            marginBottom: '1.5rem',
-            display: 'flex',
-            alignItems: 'center',
-            justifyContent: 'space-between',
-          }}
-        >
+        <h2 className={styles.sectionHeader}>
           Available Services
-          <button
-            style={{
-              backgroundColor: 'var(--bg-card)',
-              border: '1px solid var(--border-subtle)',
-              color: 'var(--text-secondary)',
-              borderRadius: 'var(--radius-full)',
-              width: '32px',
-              height: '32px',
-              display: 'flex',
-              alignItems: 'center',
-              justifyContent: 'center',
-            }}
-          >
+          <button className={styles.addButton}>
             <Plus size={16} />
           </button>
         </h2>
 
         {loading ? (
-          <p style={{ color: 'var(--text-secondary)' }}>Loading services...</p>
+          <p className={styles.loadingText}>Loading services...</p>
         ) : services.length === 0 ? (
-          <p style={{ color: 'var(--text-secondary)' }}>
+          <p className={styles.emptyText}>
             No services found. Ask admin to add some!
           </p>
         ) : (
-          <div
-            style={{
-              display: 'grid',
-              gridTemplateColumns: 'repeat(auto-fill, minmax(200px, 1fr))',
-              gap: '1.5rem',
-            }}
-          >
+          <div className={styles.grid}>
             {services.map((service) => (
               <div
                 key={service.id}
                 onClick={() => handleServiceClick(service)}
-                style={{
-                  backgroundColor: 'var(--bg-card)',
-                  borderRadius: 'var(--radius-lg)',
-                  padding: '1.5rem',
-                  border: '1px solid var(--border-subtle)',
-                  display: 'flex',
-                  flexDirection: 'column',
-                  alignItems: 'center',
-                  gap: '1rem',
-                  cursor: 'pointer',
-                  transition: 'transform 0.2s, border-color 0.2s',
-                }}
-                onMouseOver={(e) => {
-                  e.currentTarget.style.borderColor = 'var(--primary)';
-                  e.currentTarget.style.transform = 'translateY(-2px)';
-                }}
-                onMouseOut={(e) => {
-                  e.currentTarget.style.borderColor = 'var(--border-subtle)';
-                  e.currentTarget.style.transform = 'translateY(0)';
-                }}
+                className={styles.serviceCard}
               >
                 <img
                   src={service.logo}
                   alt={service.name}
-                  style={{
-                    width: '48px',
-                    height: '48px',
-                    borderRadius: '50%',
-                    objectFit: 'cover',
-                  }}
+                  className={styles.serviceLogo}
                   onError={(e) => {
                     (e.target as HTMLImageElement).src =
                       'https://via.placeholder.com/48?text=' + service.name[0];
                   }}
                 />
-                <h3 style={{ margin: 0, fontSize: '1rem', fontWeight: 600 }}>
-                  {service.name}
-                </h3>
+                <h3 className={styles.serviceTitle}>{service.name}</h3>
               </div>
             ))}
           </div>
