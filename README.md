@@ -58,13 +58,23 @@ If you encounter module resolution errors after installing new packages, reload 
 
 ## Linting
 
-Run ESLint to check for code quality issues:
+Run linters to check for code quality issues:
 
 ```bash
+# Lint both JavaScript/TypeScript and CSS
 yarn lint
+
+# Lint only JavaScript/TypeScript files
+yarn lint:js
+
+# Lint only CSS files
+yarn lint:css
 ```
 
-The project is configured to lint both JavaScript and TypeScript files with React-specific rules.
+The project uses:
+
+- **ESLint** for JavaScript and TypeScript files with React-specific rules
+- **Stylelint** for CSS files with essential validation rules
 
 ## Deployment
 
