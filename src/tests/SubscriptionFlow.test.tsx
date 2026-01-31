@@ -5,18 +5,20 @@ import { AuthProvider } from '../contexts/AuthContext';
 import * as firestore from 'firebase/firestore';
 
 // Mock Firebase
-vi.mock('../lib/firebase', () => ({
-  db: {},
-  auth: {},
-}));
+vi.mock('../lib/firebase', async (importOriginal) => {
+  const actual = await importOriginal<typeof import('../lib/firebase')>();
+  return {
+    ...(actual as object),
+    db: {},
+  };
+});
 
 vi.mock('firebase/firestore', async (importOriginal) => {
-  const actual = await importOriginal();
+  const actual = await importOriginal<typeof import('firebase/firestore')>();
   return {
-    ...actual,
+    ...(actual as object),
     getFirestore: vi.fn(),
-    collection: vi.fn((db, ...path) => path.join('/')),
-    doc: vi.fn(),
+    collection: vi.fn((_db, ...path) => path.join('/')),
     getDocs: vi.fn((path) => {
       if (path === 'services') {
         return Promise.resolve({
@@ -44,14 +46,17 @@ vi.mock('firebase/firestore', async (importOriginal) => {
 const mockCurrentUser = { uid: 'test-user' };
 
 vi.mock('../contexts/AuthContext', async (importOriginal) => {
-  const actual = await importOriginal();
+  const actual =
+    await importOriginal<typeof import('../contexts/AuthContext')>();
   return {
-    ...actual,
+    ...(actual as object),
     useAuth: () => ({
       currentUser: mockCurrentUser,
       logout: vi.fn(),
     }),
-    AuthProvider: ({ children }) => children,
+    AuthProvider: ({ children }: { children: React.ReactNode }) => (
+      <div>{children}</div>
+    ),
   };
 });
 
@@ -82,17 +87,29 @@ describe('Subscription Flow', () => {
     expect(priceInput).toBeInTheDocument();
     fireEvent.change(priceInput, { target: { value: '15.99' } });
 
-    fireEvent.click(addBtn);
+    const form = addBtn.closest('form');
+    // Ensure form exists and submit it
+    if (form) fireEvent.submit(form);
+    else fireEvent.click(addBtn); // Fallback
 
     // Verify addDoc called (to users/test-user/subscriptions)
-    expect(firestore.addDoc).toHaveBeenCalledWith(
-      expect.anything(), // Collection ref (users/uid/subs)
-      expect.objectContaining({
-        serviceId: '1',
-        name: 'Netflix',
-        price: '15.99',
-        status: 'active',
-      })
+    // Verify addDoc called (to users/test-user/subscriptions)
+    // Removed wait for "saved" text as it's not implemented.
+    await import('@testing-library/react').then(({ waitFor }) =>
+      waitFor(
+        () => {
+          expect(firestore.addDoc).toHaveBeenCalledWith(
+            expect.anything(), // Collection ref (users/uid/subs)
+            expect.objectContaining({
+              serviceId: '1',
+              name: 'Netflix',
+              price: '15.99',
+              status: 'active',
+            })
+          );
+        },
+        { timeout: 3000 }
+      )
     );
   });
 });

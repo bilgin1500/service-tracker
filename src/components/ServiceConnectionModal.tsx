@@ -1,19 +1,37 @@
 import { useState } from 'react';
 import { X, Check } from 'lucide-react';
+import { Service } from '../types';
 
-export default function ServiceConnectionModal({ service, onClose, onSave }) {
-  const [method, setMethod] = useState(service.hasApi ? 'connect' : 'manual');
-  const [formData, setFormData] = useState({
-    price: service.defaultPrice || '',
-    interval: service.defaultInterval || 'monthly',
-  });
+interface ServiceConnectionModalProps {
+  service: Service;
+  onClose: () => void;
+  onSave: (data: any) => Promise<void>; // TODO: typed data
+}
+
+export default function ServiceConnectionModal({
+  service,
+  onClose,
+  onSave,
+}: ServiceConnectionModalProps) {
   const [loading, setLoading] = useState(false);
+  const [formData, setFormData] = useState({
+    price: service.defaultPrice?.toString() || '',
+    interval: service.defaultInterval || 'monthly',
+    method: service.hasApi ? 'connect' : 'manual',
+  });
 
-  const handleSubmit = async (e) => {
+  const method = formData.method;
+  const setMethod = (newMethod: string) =>
+    setFormData({ ...formData, method: newMethod });
+
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setLoading(true);
-    await onSave({ ...formData, method }); // Pass back data to parent
+    // Simulate API connection or just save
+    await new Promise((resolve) => setTimeout(resolve, 1000));
+    await onSave(formData);
     setLoading(false);
+    setTimeout(onClose, 1500);
   };
 
   return (

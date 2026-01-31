@@ -1,8 +1,6 @@
 import { render, screen } from '@testing-library/react';
 import App from '../App';
 import { AuthProvider } from '../contexts/AuthContext';
-import { LogIn } from 'lucide-react';
-import LoginPage from '../pages/LoginPage';
 import { vi } from 'vitest';
 
 // Mock Firebase Auth
@@ -11,15 +9,21 @@ vi.mock('firebase/auth', () => ({
   GoogleAuthProvider: vi.fn(),
   signInWithPopup: vi.fn(),
   signOut: vi.fn(),
-  onAuthStateChanged: vi.fn((auth, callback) => {
+  onAuthStateChanged: vi.fn((_auth, callback) => {
     callback(null); // Simulate unauthenticated state by default
     return () => {}; // Unsubscribe function
   }),
 }));
 
 // Mock firebase lib to avoid emulator connection logs
-vi.mock('../lib/firebase', () => ({
-  auth: { currentUser: null },
+vi.mock('../contexts/AuthContext', () => ({
+  useAuth: () => ({
+    loginWithGoogle: vi.fn(),
+    currentUser: null,
+  }),
+  AuthProvider: ({ children }: { children: React.ReactNode }) => (
+    <div>{children}</div>
+  ),
 }));
 
 describe('Login Flow', () => {

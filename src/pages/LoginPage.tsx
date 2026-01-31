@@ -68,12 +68,14 @@ export default function LoginPage() {
             transition: 'background-color 0.2s',
             width: '100%',
           }}
-          onMouseOver={(e) =>
-            (e.target.style.backgroundColor = 'var(--primary-hover)')
-          }
-          onMouseOut={(e) =>
-            (e.target.style.backgroundColor = 'var(--primary)')
-          }
+          onMouseOver={(e) => {
+            (e.currentTarget as HTMLElement).style.backgroundColor =
+              'var(--primary-dark)';
+          }}
+          onMouseOut={(e) => {
+            (e.currentTarget as HTMLElement).style.backgroundColor =
+              'var(--primary)';
+          }}
         >
           <LogIn size={20} />
           Sign in with Google

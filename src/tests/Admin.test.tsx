@@ -9,7 +9,7 @@ vi.mock('../lib/firebase', () => ({
 }));
 
 vi.mock('firebase/firestore', async (importOriginal) => {
-  const actual = await importOriginal();
+  const actual = await importOriginal<typeof import('firebase/firestore')>();
   return {
     ...actual,
     getFirestore: vi.fn(),

@@ -4,17 +4,17 @@ import Dashboard from '../pages/Dashboard';
 import { AuthProvider } from '../contexts/AuthContext';
 
 // Mock Firebase
-vi.mock('../lib/firebase', () => ({
-  db: {},
-  auth: {},
-}));
-
-vi.mock('firebase/firestore', async (importOriginal) => {
-  const actual = await importOriginal();
+vi.mock('../lib/firebase', async () => {
   return {
-    ...actual,
+    db: {},
+    auth: {},
+  };
+});
+
+vi.mock('firebase/firestore', async () => {
+  return {
     getFirestore: vi.fn(),
-    collection: vi.fn((db, ...path) => path.join('/')), // Return path as string for ease
+    collection: vi.fn((_db, ...path) => path.join('/')),
     getDocs: vi.fn((path) => {
       if (path === 'services') {
         return Promise.resolve({ docs: [] }); // Available services
@@ -43,14 +43,17 @@ vi.mock('firebase/firestore', async (importOriginal) => {
 const mockCurrentUser = { uid: 'test-user' };
 
 vi.mock('../contexts/AuthContext', async (importOriginal) => {
-  const actual = await importOriginal();
+  const actual =
+    await importOriginal<typeof import('../contexts/AuthContext')>();
   return {
-    ...actual,
+    ...(actual as object),
     useAuth: () => ({
       currentUser: mockCurrentUser,
       logout: vi.fn(),
     }),
-    AuthProvider: ({ children }) => children,
+    AuthProvider: ({ children }: { children: React.ReactNode }) => (
+      <div>{children}</div>
+    ),
   };
 });
 

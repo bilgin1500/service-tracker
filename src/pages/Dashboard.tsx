@@ -4,19 +4,21 @@ import { collection, getDocs, addDoc } from 'firebase/firestore';
 import { db } from '../lib/firebase';
 import { LogOut, Plus } from 'lucide-react';
 import ServiceConnectionModal from '../components/ServiceConnectionModal';
+import { Service, Subscription } from '../types';
 
 export default function Dashboard() {
   const { logout, currentUser } = useAuth();
-  const [services, setServices] = useState([]);
-  const [subscriptions, setSubscriptions] = useState([]);
+  const [services, setServices] = useState<Service[]>([]);
+  const [subscriptions, setSubscriptions] = useState<Subscription[]>([]); // Initialize empty
   const [loading, setLoading] = useState(true);
-  const [selectedService, setSelectedService] = useState(null);
+  const [selectedService, setSelectedService] = useState<Service | null>(null);
 
-  const handleServiceClick = (service) => {
+  const handleServiceClick = (service: Service) => {
     setSelectedService(service);
   };
 
-  const handleSaveSubscription = async (data) => {
+  const handleSaveSubscription = async (data: any) => {
+    if (!currentUser || !selectedService) return;
     try {
       await addDoc(collection(db, 'users', currentUser.uid, 'subscriptions'), {
         serviceId: selectedService.id,
@@ -36,7 +38,7 @@ export default function Dashboard() {
         const fetchedSubs = subsSnapshot.docs.map((doc) => ({
           id: doc.id,
           ...doc.data(),
-        }));
+        })) as Subscription[];
         setSubscriptions(fetchedSubs);
       }
     } catch (error) {
@@ -53,7 +55,7 @@ export default function Dashboard() {
         const fetchedServices = servicesSnapshot.docs.map((doc) => ({
           id: doc.id,
           ...doc.data(),
-        }));
+        })) as Service[];
         setServices(fetchedServices);
 
         // Fetch User Subscriptions
@@ -64,7 +66,7 @@ export default function Dashboard() {
           const fetchedSubs = subsSnapshot.docs.map((doc) => ({
             id: doc.id,
             ...doc.data(),
-          }));
+          })) as Subscription[];
           setSubscriptions(fetchedSubs);
         }
       } catch (error) {
@@ -302,7 +304,7 @@ export default function Dashboard() {
                     objectFit: 'cover',
                   }}
                   onError={(e) => {
-                    e.target.src =
+                    (e.target as HTMLImageElement).src =
                       'https://via.placeholder.com/48?text=' + service.name[0];
                   }}
                 />

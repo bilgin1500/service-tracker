@@ -4,10 +4,10 @@ import LoginPage from './pages/LoginPage';
 import Dashboard from './pages/Dashboard';
 import AdminDashboard from './pages/AdminDashboard';
 
-function PrivateRoute({ children }) {
+const PrivateRoute = ({ children }: { children: React.ReactNode }) => {
   const { currentUser } = useAuth();
   return currentUser ? children : <Navigate to="/login" />;
-}
+};
 
 function App() {
   return (

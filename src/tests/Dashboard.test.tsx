@@ -10,12 +10,18 @@ vi.mock('../lib/firebase', () => ({
 }));
 
 vi.mock('firebase/firestore', async (importOriginal) => {
-  const actual = await importOriginal();
+  const actual = await importOriginal<typeof import('firebase/firestore')>();
   return {
     ...actual,
     getFirestore: vi.fn(),
-    collection: vi.fn((db, ...path) => path.join('/')),
+    collection: vi.fn((_db, ...path) => path.join('/')),
     getDocs: vi.fn((path) => {
+      // ... (rest is same, just fixing the spread issue by casting actual)
+      // Actually I should just cast importOriginal result or verify typing.
+      // But for now I will fix the 'children' type in AuthProvider mock below.
+      // ... (rest is same, just fixing the spread issue by casting actual)
+      // Actually I should just cast importOriginal result or verify typing.
+      // But for now I will fix the 'children' type in AuthProvider mock below.
       if (path === 'services') {
         return Promise.resolve({
           docs: [
@@ -38,7 +44,6 @@ vi.mock('firebase/firestore', async (importOriginal) => {
           ],
         });
       }
-      // Return empty for subscriptions
       return Promise.resolve({ docs: [] });
     }),
     // Mock for user subscriptions query
@@ -47,17 +52,18 @@ vi.mock('firebase/firestore', async (importOriginal) => {
 });
 
 // Mock Auth to be logged in
-const mockCurrentUser = { uid: 'test-user' };
-
 vi.mock('../contexts/AuthContext', async (importOriginal) => {
-  const actual = await importOriginal();
+  const actual =
+    await importOriginal<typeof import('../contexts/AuthContext')>();
   return {
     ...actual,
     useAuth: () => ({
-      currentUser: mockCurrentUser,
+      currentUser: { uid: 'test-uid', displayName: 'Test User' },
       logout: vi.fn(),
     }),
-    AuthProvider: ({ children }) => children,
+    AuthProvider: ({ children }: { children: React.ReactNode }) => (
+      <div>{children}</div>
+    ),
   };
 });
 
