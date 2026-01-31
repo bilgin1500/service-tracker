@@ -43,6 +43,29 @@ A comprehensive web application to track digital subscriptions, built with React
    ```
    Open [http://localhost:5173](http://localhost:5173).
 
+## IDE Setup (VS Code)
+
+This project uses **Yarn PnP** (Plug'n'Play) for dependency management. To ensure proper TypeScript and ESLint support in VS Code:
+
+1. **Install recommended extensions** (VS Code will prompt you automatically)
+2. **Select Workspace TypeScript version**:
+   - Open any `.ts` or `.tsx` file
+   - Press `Cmd+Shift+P` (Mac) or `Ctrl+Shift+P` (Windows/Linux)
+   - Type "TypeScript: Select TypeScript Version"
+   - Choose **"Use Workspace Version"**
+
+If you encounter module resolution errors after installing new packages, reload VS Code (`Cmd+Shift+P` → "Developer: Reload Window").
+
+## Linting
+
+Run ESLint to check for code quality issues:
+
+```bash
+yarn lint
+```
+
+The project is configured to lint both JavaScript and TypeScript files with React-specific rules.
+
 ## Deployment
 
 Build the project:
