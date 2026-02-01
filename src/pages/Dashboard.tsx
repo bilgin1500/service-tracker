@@ -4,7 +4,7 @@ import { collection, getDocs, addDoc } from 'firebase/firestore';
 import { db } from '../lib/firebase';
 import { LogOut, Plus } from 'lucide-react';
 import ServiceConnectionModal from '../components/ServiceConnectionModal';
-import { Service, Subscription } from '../types';
+import { Service, Subscription, SubscriptionFormData } from '../types';
 import styles from './Dashboard.module.css';
 
 export default function Dashboard() {
@@ -18,7 +18,7 @@ export default function Dashboard() {
     setSelectedService(service);
   };
 
-  const handleSaveSubscription = async (data: any) => {
+  const handleSaveSubscription = async (data: SubscriptionFormData) => {
     if (!currentUser || !selectedService) return;
     try {
       await addDoc(collection(db, 'users', currentUser.uid, 'subscriptions'), {

@@ -10,7 +10,7 @@ export default defineConfig(({ mode }) => ({
       checker({
         eslint: {
           useFlatConfig: true,
-          lintCommand: 'eslint "./src/**/*.{js,jsx}"',
+          lintCommand: 'eslint "./src/**/*.{ts,tsx}"',
         },
         overlay: { initialIsOpen: false },
       }),

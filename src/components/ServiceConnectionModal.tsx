@@ -1,12 +1,12 @@
 import { useState } from 'react';
 import { X, Check } from 'lucide-react';
-import { Service } from '../types';
+import { Service, SubscriptionFormData } from '../types';
 import styles from './ServiceConnectionModal.module.css';
 
 interface ServiceConnectionModalProps {
   service: Service;
   onClose: () => void;
-  onSave: (data: any) => Promise<void>; // TODO: typed data
+  onSave: (data: SubscriptionFormData) => Promise<void>;
 }
 
 export default function ServiceConnectionModal({
@@ -15,14 +15,14 @@ export default function ServiceConnectionModal({
   onSave,
 }: ServiceConnectionModalProps) {
   const [loading, setLoading] = useState(false);
-  const [formData, setFormData] = useState({
+  const [formData, setFormData] = useState<SubscriptionFormData>({
     price: service.defaultPrice?.toString() || '',
     interval: service.defaultInterval || 'monthly',
     method: service.hasApi ? 'connect' : 'manual',
   });
 
   const method = formData.method;
-  const setMethod = (newMethod: string) =>
+  const setMethod = (newMethod: 'connect' | 'manual') =>
     setFormData({ ...formData, method: newMethod });
 
   const handleSubmit = async (e: React.FormEvent) => {

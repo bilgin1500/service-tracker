@@ -42,6 +42,9 @@ describe('Admin Service Creation', () => {
     const submitBtn = screen.getByRole('button', { name: /add service/i });
     fireEvent.click(submitBtn);
 
+    // Wait for success message (prevents act warnings)
+    await screen.findByText(/service added successfully/i);
+
     // Verify Firestore call
     expect(firestore.addDoc).toHaveBeenCalledWith(
       expect.anything(), // collection reference

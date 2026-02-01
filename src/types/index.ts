@@ -18,3 +18,8 @@ export interface Subscription {
   method: string; // 'connect' | 'manual'
   managementUrl?: string;
 }
+export interface SubscriptionFormData {
+  price?: string;
+  interval?: string;
+  method: 'connect' | 'manual';
+}
